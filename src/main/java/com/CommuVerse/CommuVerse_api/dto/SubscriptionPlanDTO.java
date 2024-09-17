@@ -19,5 +19,5 @@ public class SubscriptionPlanDTO {
     private BigDecimal price;
     private String renewalPeriod;
     private SubscriptionLevel level;
-    private User creator; // Relación con el creador
+    private User creator;
 }

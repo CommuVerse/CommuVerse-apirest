@@ -14,3 +14,10 @@ VALUES
     ('Annual Basic Plan', 'Basic plan with annual payment discount.', 'BASIC', 99.99, 'annual', 3),
     ('Annual Premium Plan', 'Premium plan with annual payment discount and extra benefits.', 'PREMIUM', 199.99, 'annual', 4)
 ON CONFLICT (name) DO NOTHING;
+
+INSERT INTO articles ( type, title, content, publication_date, status, num_reads, num_comments, num_likes, scheduled_date, user_id)
+VALUES
+    ( 'Tech', 'Exploring New AI Trends', 'This article discusses the latest trends in artificial intelligence, including advancements in machine learning and neural networks.', '2024-09-15 09:00:00', true, 150, 20, 30, '2024-09-15 09:00:00', 1),
+    ( 'Lifestyle', 'Top 10 Travel Destinations for 2024', 'Discover the best travel destinations for the upcoming year, featuring beautiful landscapes and exciting cultures.', '2024-09-16 11:30:00', true, 200, 25, 45, '2024-09-16 11:30:00', 2),
+    ( 'Health', 'The Benefits of a Balanced Diet', 'An in-depth look at how a balanced diet can improve overall health, including tips on maintaining a nutritious eating plan.', '2024-09-17 14:00:00', true, 180, 18, 40, '2024-09-17 14:00:00', 3),
+    ( 'Finance', 'Investing in the Stock Market', 'A guide to investing in the stock market, including strategies for beginners and advice on building a diversified portfolio.', '2024-09-18 16:45:00', true, 250, 30, 55, '2024-09-18 16:45:00', 4);

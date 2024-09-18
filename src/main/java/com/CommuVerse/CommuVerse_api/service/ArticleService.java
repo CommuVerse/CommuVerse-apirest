@@ -32,6 +32,12 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(article);
         return articleMapper.toDTO(savedArticle);
     }
-
+ // Nuevo método para buscar artículos por palabras clave
+ public List<ArticleDTO> searchArticlesByKeyword(String keyword) {
+    List<Article> articles = articleRepository.searchByKeyword(keyword);
+    return articles.stream()
+            .map(articleMapper::toDTO)
+            .collect(Collectors.toList());
+}
 
 }

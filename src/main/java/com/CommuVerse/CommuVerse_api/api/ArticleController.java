@@ -33,4 +33,12 @@ public class ArticleController {
 
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
+    @PutMapping("/{articleId}/edit")
+    public ResponseEntity<ArticleDTO> editArticle(
+            @PathVariable Integer articleId,
+            @RequestBody ArticleDTO dto) {
+        ArticleDTO updatedArticle = articleService.editArticle(articleId, dto);
+        return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
+    }
+
 }

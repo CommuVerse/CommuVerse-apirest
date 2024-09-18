@@ -40,4 +40,17 @@ public class ArticleService {
             .collect(Collectors.toList());
 }
 
+    @Transactional
+    public ArticleDTO editArticle(Integer articleId, ArticleDTO dto) {
+        Article existingArticle = articleRepository.findById(articleId)
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+
+        existingArticle.setTitle(dto.getTitle());
+        existingArticle.setContent(dto.getContent());
+        Article updatedArticle = articleRepository.save(existingArticle);
+
+        return articleMapper.toDTO(updatedArticle);
+    }
+
+
 }

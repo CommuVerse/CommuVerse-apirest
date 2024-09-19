@@ -16,14 +16,14 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // Agregar un comentario
+
     @PostMapping("/add")
     public ResponseEntity<CommentDTO> addComment(@RequestBody CommentDTO dto) {
         CommentDTO createdComment = commentService.addComment(dto);
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
 
-    // Mostrar todos los comentarios de un artículo
+ 
     @GetMapping("/article/{articleId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByArticle(@PathVariable Integer articleId) {
         List<CommentDTO> comments = commentService.getCommentsByArticle(articleId);
@@ -33,14 +33,14 @@ public class CommentController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    // Editar un comentario (dentro de los 10 minutos)
+
     @PutMapping("/{commentId}/edit")
     public ResponseEntity<CommentDTO> editComment(@PathVariable Integer commentId, @RequestBody CommentDTO dto) {
         CommentDTO updatedComment = commentService.editComment(commentId, dto);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 
-    // Eliminar un comentario (dentro de los 10 minutos)
+
     @DeleteMapping("/{commentId}/delete")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer commentId) {
         commentService.deleteComment(commentId);

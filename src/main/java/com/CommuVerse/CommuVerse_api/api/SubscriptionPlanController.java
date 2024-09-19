@@ -23,14 +23,13 @@ public class SubscriptionPlanController {
         return new ResponseEntity<>(createdPlan, HttpStatus.CREATED); 
     }
 
-    // Obtener todos los planes de suscripción
+
     @GetMapping
     public ResponseEntity<List<SubscriptionPlanDTO>> getAllSubscriptionPlans() {
         List<SubscriptionPlanDTO> plans = subscriptionPlanService.getAllSubscriptionPlans();
         return new ResponseEntity<>(plans, HttpStatus.OK); 
     }
 
-    // Obtener todos los planes de suscripción por ID de usuario
     @GetMapping("{id}")
     public ResponseEntity<List<SubscriptionPlanDTO>> getSubscriptionPlansByUserId(@PathVariable("id") Integer userId) {
         List<SubscriptionPlanDTO> plans = subscriptionPlanService.getAllSubscriptionPlansByUserId(userId);

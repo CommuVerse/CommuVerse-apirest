@@ -19,7 +19,6 @@ public class FavoriteController {
         this.favoriteService = favoriteService;
     }
 
-    // POST /favorites/addFavorite
     @PostMapping("/addFavorite")
     public ResponseEntity<FavoriteDTO> addFavorite(@RequestBody FavoriteDTO favoriteDTO) {
         try {

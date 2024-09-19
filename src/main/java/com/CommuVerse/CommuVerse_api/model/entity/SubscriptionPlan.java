@@ -26,13 +26,13 @@ public class SubscriptionPlan {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level", nullable = false)
-    private SubscriptionLevel level; // Básico, Premium, etc.
+    private SubscriptionLevel level;
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @Column(name = "renewal_period", nullable = false)
-    private String renewalPeriod; // Mensual, anual, etc.
+    private String renewalPeriod; 
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

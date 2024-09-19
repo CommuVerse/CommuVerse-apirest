@@ -56,5 +56,11 @@ public class FavoriteService {
         Favorite savedFavorite = favoriteRepository.save(favorite);
         return favoriteMapper.toDTO(savedFavorite);
     }
-
+    public void deleteFavorite(Integer id) {
+        Optional<Favorite> favoriteOptional = favoriteRepository.findById(id);
+        if (favoriteOptional.isEmpty()) {
+            throw new RuntimeException("Artículo con ID " + id + " no encontrado en favoritos");
+        }
+        favoriteRepository.deleteById(id);
+    }
 }

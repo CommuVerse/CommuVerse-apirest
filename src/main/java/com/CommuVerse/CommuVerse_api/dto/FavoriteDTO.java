@@ -14,7 +14,7 @@ import com.CommuVerse.CommuVerse_api.model.entity.Article;
 @AllArgsConstructor
 @Builder
 public class FavoriteDTO {
-    private int id;
+    private int Id;
     private Date dateSaved;
     private User reader;
     private Article article; 

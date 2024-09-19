@@ -29,5 +29,14 @@ public class FavoriteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+    @DeleteMapping("/deleteFavorite/{id}")
+public ResponseEntity<String> deleteFavorite(@PathVariable("id") Integer id) {
+    try {
+        favoriteService.deleteFavorite(id);
+        return ResponseEntity.ok("Artículo eliminado de favoritos con éxito");
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Artículo no encontrado en favoritos");
+    }
+}
 
 }

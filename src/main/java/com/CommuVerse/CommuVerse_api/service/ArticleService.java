@@ -52,5 +52,4 @@ public class ArticleService {
         return articleMapper.toDTO(updatedArticle);
     }
 
-
 }

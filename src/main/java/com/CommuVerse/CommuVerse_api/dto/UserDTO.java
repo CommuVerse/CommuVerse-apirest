@@ -14,11 +14,31 @@ import java.util.Date;
 public class UserDTO {
     private int id;
     private String name;
-    private String nickName;
+    private String nickName; // Usado para la autenticación
     private String email;
     private String password;
     private String bio;
     private Date dateOfBirth;  
     private String role;
     private boolean isActive;
+
+    // AuthRequest como clase estática
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AuthRequest {
+        private String nickName; // Cambiado a nickName
+        private String password;
+    }
+
+    // AuthResponse como clase estática
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AuthResponse {
+        private String token;
+        private String nickName; // Cambiado a nickName
+    }
 }

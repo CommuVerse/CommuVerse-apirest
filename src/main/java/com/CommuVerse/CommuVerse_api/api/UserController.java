@@ -18,7 +18,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
- 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         User newUser = userService.registerUser(userDTO);
@@ -26,17 +25,16 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-    
     @PostMapping("/login")
-public ResponseEntity<String> login(@RequestBody Map<String, String> loginRequest) {
-    String nickname = loginRequest.get("nickname");
-    String password = loginRequest.get("password");
-
-    boolean isAuthenticated = userService.authenticate(nickname, password);
-    if (isAuthenticated) {
-        return new ResponseEntity<>("Login exitoso. Redirigiendo a la página de inicio...", HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>("Nickname o contraseña incorrectos.", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> login(@RequestBody Map<String, String> loginRequest) {
+        String nickname = loginRequest.get("nickname");
+        String password = loginRequest.get("password");
+    
+        String token = userService.authenticate(nickname, password);
+        if (token != null) {
+            return ResponseEntity.ok("Login exitoso. Token: " + token);
+        } else {
+            return new ResponseEntity<>("Nickname o contraseña incorrectos.", HttpStatus.UNAUTHORIZED);
+        }
     }
-}
 }

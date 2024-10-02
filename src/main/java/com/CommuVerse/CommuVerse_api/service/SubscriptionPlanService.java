@@ -58,16 +58,16 @@ public class SubscriptionPlanService {
             SubscriptionPlan updatedPlan = subscriptionPlanRepository.save(existingPlan);
             return subscriptionPlanMapper.toDTO(updatedPlan);
         }
-        return null; // Retorna null si no se encuentra el plan
+        return null; 
     }
 
         // Método para eliminar un plan de suscripción
         public boolean deleteSubscriptionPlan(Integer id) {
             if (subscriptionPlanRepository.existsById(id)) {
                 subscriptionPlanRepository.deleteById(id);
-                return true; // Indica que se eliminó
+                return true; 
             }
-            return false; // Indica que no se encontró el plan
+            return false; 
         }
     
 }

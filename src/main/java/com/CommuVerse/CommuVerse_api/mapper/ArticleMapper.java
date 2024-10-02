@@ -16,11 +16,11 @@ public class ArticleMapper {
 
     public ArticleDTO toDTO(Article article) {
         ArticleDTO dto = modelMapper.map(article, ArticleDTO.class);
-        dto.setCreatorId(article.getCreator().getId()); // Ajuste manual del campo creatorId
+        dto.setCreatorId(article.getCreator().getId());
         return dto;
     }
 
     public Article toEntity(ArticleDTO articleDTO) {
-        return modelMapper.map(articleDTO, Article.class); // Mapeo automático
+        return modelMapper.map(articleDTO, Article.class);
     }
 }

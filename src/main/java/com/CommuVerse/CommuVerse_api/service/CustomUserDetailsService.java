@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getNickName(),
                 user.getPassword(),
-                // No se pasa ninguna autoridad ya que no tienes roles
+
                 new ArrayList<>()
         );
     }

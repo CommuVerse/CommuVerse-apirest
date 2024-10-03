@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.CommuVerse.CommuVerse_api.service.RevokedTokenService;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -58,4 +60,13 @@ public class JwtUtil {
     private Boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
+    public Boolean validateToken(String token, String nickname, RevokedTokenService revokedTokenService) {
+    final String extractedUsername = extractUsername(token);
+    
+    if (revokedTokenService.isTokenRevoked(token)) {
+        return false;  
+    }
+    return (extractedUsername.equals(nickname) && !isTokenExpired(token));
+}
+
 }

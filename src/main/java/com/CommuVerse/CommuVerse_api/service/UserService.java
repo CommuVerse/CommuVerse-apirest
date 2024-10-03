@@ -38,23 +38,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
+    // Método para autenticar un usuario y generar un token JWT
     public String authenticate(String nickname, String password) {
         var user = userRepository.findByNickName(nickname);
 
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-
-            return jwtUtil.generateToken(nickname);  // Genera el token JWT
-        }
-
-        return null;  // Si la autenticación falla
-    }
-
-    // Método para buscar un usuario por su nickname
-    public User findByNickName(String nickname) {
-        return userRepository.findByNickName(nickname)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
             return jwtUtil.generateToken(nickname);  // Genera un token JWT
         }
 
@@ -91,6 +79,5 @@ public class UserService {
     // Método para extraer el username (nickname) del token
     public String extractUsernameFromToken(String token) {
         return jwtUtil.extractUsername(token);
-
     }
 }

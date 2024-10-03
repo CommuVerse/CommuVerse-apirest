@@ -79,6 +79,29 @@ public class SubscriptionController {
     
         return ResponseEntity.ok(subscriptions);
     }
+    
+    @DeleteMapping("/user/{userId}/{subscriptionId}")
+    public ResponseEntity<String> cancelSubscription(
+            @RequestHeader("Authorization") String authHeader, 
+            @PathVariable Integer userId,
+            @PathVariable Integer subscriptionId) {
+
+        String token = authHeader.substring(7); 
+        String nickname = jwtUtil.extractUsername(token); 
+
+        if (!jwtUtil.validateToken(token, nickname)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            subscriptionService.cancelSubscription(userId, subscriptionId);
+            return ResponseEntity.ok("Suscripción cancelada con éxito.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al cancelar la suscripción: " + e.getMessage());
+        }
+    }
+
+
 
 }
     

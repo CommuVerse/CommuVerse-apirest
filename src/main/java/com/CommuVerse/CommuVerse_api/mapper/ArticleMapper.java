@@ -23,4 +23,11 @@ public class ArticleMapper {
     public Article toEntity(ArticleDTO articleDTO) {
         return modelMapper.map(articleDTO, Article.class);
     }
+
+    public ArticleDTO toDto(Article article) {
+        ArticleDTO dto = modelMapper.map(article, ArticleDTO.class);
+        dto.setCreatorId(article.getCreator().getId());
+        return dto;
+    }
+
 }

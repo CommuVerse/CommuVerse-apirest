@@ -1,5 +1,5 @@
 INSERT INTO users (name, nickname, date_of_birth, email, password, bio, profile_picture, registration_date, role)
-VALUES 
+VALUES
     ('Alice Smith', 'Alice', '1990-05-15', 'alice.smith@example.com', 'password123', 'Tech enthusiast and writer.', 'profile1.jpg', '2024-09-15 10:00:00', 'CREATOR'),
     ('Bob Johnson', 'Bob', '1985-11-20', 'bob.johnson@example.com', 'password456', 'Passionate about movies and reviews.', 'profile2.jpg', '2024-09-15 11:00:00', 'READER'),
     ('Carol White', 'Carol', '1992-07-10', 'carol.white@example.com', 'password789', 'Loves to travel and share experiences.', 'profile3.jpg', '2024-09-15 12:00:00', 'CREATOR'),

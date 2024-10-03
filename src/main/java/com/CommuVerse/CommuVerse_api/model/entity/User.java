@@ -48,9 +48,13 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    // Nuevo atributo para controlar si la sesión está activa o no
+    @Column(name = "session_active", nullable = false)
+    private boolean sessionActive;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> role.name()); 
+        return List.of(() -> role.name());
     }
 
     @Override
@@ -60,17 +64,17 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; 
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; 
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; 
+        return true;
     }
 
     @Override

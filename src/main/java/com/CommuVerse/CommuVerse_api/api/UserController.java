@@ -22,63 +22,65 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserDTO userDTO) {  
+    public ResponseEntity<UserDTO> register(@Valid @RequestBody UserDTO userDTO) {
         User newUser = userService.registerUser(userDTO);
         UserDTO responseDTO = userMapper.toUserDTO(newUser);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         String nickname = authRequest.getNickName();
         String password = authRequest.getPassword();
-    
-        // Autenticar al usuario con el servicio
+
         String token = userService.authenticate(nickname, password);
-    
+
         if (token != null) {
             AuthResponse authResponse = AuthResponse.builder()
-                .token(token)
-                .nickName(nickname)
-                .build();
-    
+                    .token(token)
+                    .nickName(nickname)
+                    .build();
+
             return ResponseEntity.ok(authResponse);
         } else {
-            // Devolver mensaje de error
             AuthResponse authResponse = AuthResponse.builder()
-                .nickName(nickname)
-                .message("Nickname o contraseña incorrectos")
-                .build();
-    
+                    .nickName(nickname)
+                    .message("Nickname o contraseña incorrectos")
+                    .build();
+
             return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
         }
     }
-@PutMapping("/profile/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")  // Requiere que el usuario esté autenticado
+
+    @PutMapping("/profile/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDTO> updateProfile(@PathVariable int userId, @Valid @RequestBody UserDTO userDTO, @RequestHeader("Authorization") String token) {
-        // Validar el token y obtener el nickname del usuario autenticado
-        String extractedToken = token.substring(7);  // Quitar "Bearer " del token
+        String extractedToken = token.substring(7);
         String username = userService.extractUsernameFromToken(extractedToken);
 
-        // Asegurarse de que el usuario autenticado solo edite su propio perfil
         if (!userService.isUserOwnerOfProfile(username, userId)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-
         User updatedUser = userService.updateUserProfile(userId, userDTO);
         UserDTO responseDTO = userMapper.toUserDTO(updatedUser);
-
-
-        String message = "Los cambios han sido realizados con éxito. " +
-                            "Cambios: nickname: " + updatedUser.getNickName() + 
-                            ", biografía: " + updatedUser.getBio() + 
-                            ", foto de perfil: " + updatedUser.getProfilePicture();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    // Endpoint para cerrar sesión
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        String extractedToken = token.substring(7);
+        String username = userService.extractUsernameFromToken(extractedToken);
+
+        if (userService.revokeToken(extractedToken)) {
+            String name = userService.getUserNameByNickName(username);
+            String goodbyeMessage = "ADIOS " + name;
+            return new ResponseEntity<>(goodbyeMessage, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Token inválido o no encontrado.", HttpStatus.UNAUTHORIZED);
+        }
+    }
 }

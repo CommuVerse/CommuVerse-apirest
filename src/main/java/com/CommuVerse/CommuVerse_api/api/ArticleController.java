@@ -74,7 +74,7 @@ public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam St
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(article, HttpStatus.OK);
-       }
+        }
 
     @DeleteMapping("/{articleId}/deleteArticle")
     public ResponseEntity<Void> deleteArticleById(@PathVariable Integer articleId) {

@@ -20,8 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final JwtUtil jwtUtil;
+    private final RevokedTokenService revokedTokenService;
 
-    // Método para registrar un nuevo usuario
     @Transactional
     public User registerUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
@@ -34,41 +34,44 @@ public class UserService {
 
         User user = userMapper.toUser(userDTO);
         user.setRegistrationDate(LocalDateTime.now());
+        user.setSessionActive(false); // Inicialmente, la sesión está inactiva
 
         return userRepository.save(user);
     }
 
-    // Método para autenticar un usuario y generar un token JWT
     public String authenticate(String nickname, String password) {
         var user = userRepository.findByNickName(nickname);
 
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return jwtUtil.generateToken(nickname);  // Genera un token JWT
+            user.get().setSessionActive(true); // Marcar la sesión como activa
+            userRepository.save(user.get()); // Guardar el estado en la base de datos
+            return jwtUtil.generateToken(nickname);  
         }
 
-        return null;  // Si la autenticación falla, retorna null
+        return null;  
     }
 
-    // Método para verificar si el usuario autenticado es el dueño del perfil que está intentando editar
     public boolean isUserOwnerOfProfile(String username, int userId) {
         return userRepository.findById(userId)
-            .map(user -> user.getNickName().equals(username))
+            .map(user -> user.getNickName().equals(username) && user.isSessionActive()) // Solo si la sesión está activa
             .orElse(false);
     }
 
-    // Método para actualizar el perfil del usuario
     @Transactional
     public User updateUserProfile(int userId, UserDTO updatedUserDTO) {
         User existingUser = userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        // Validar que el nuevo nickname no esté en uso por otro usuario
         if (!existingUser.getNickName().equals(updatedUserDTO.getNickName()) &&
                 userRepository.findByNickName(updatedUserDTO.getNickName()).isPresent()) {
             throw new BadRequestException("El nickname ya existe.");
         }
 
-        // Actualizar los datos del usuario
+        // Validar que la sesión esté activa antes de permitir la edición del perfil
+        if (!existingUser.isSessionActive()) {
+            throw new BadRequestException("No se puede editar el perfil porque la sesión está inactiva.");
+        }
+
         existingUser.setNickName(updatedUserDTO.getNickName());
         existingUser.setBio(updatedUserDTO.getBio());
         existingUser.setProfilePicture(updatedUserDTO.getProfilePicture());
@@ -76,8 +79,24 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-    // Método para extraer el username (nickname) del token
     public String extractUsernameFromToken(String token) {
         return jwtUtil.extractUsername(token);
+    }
+
+    public boolean revokeToken(String token) {
+        String username = jwtUtil.extractUsername(token);
+        User user = userRepository.findByNickName(username)
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        user.setSessionActive(false); // Marcar la sesión como inactiva
+        userRepository.save(user); // Guardar el estado en la base de datos
+
+        return revokedTokenService.revokeToken(token); // Revoca el token
+    }
+
+    public String getUserNameByNickName(String nickName) {
+        return userRepository.findByNickName(nickName)
+                .map(User::getName)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
 }

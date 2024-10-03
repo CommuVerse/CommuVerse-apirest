@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class JwtUtil {
 
     @Value("${jwt.secret}") 
-    private String SECRET_KEY;  // El valor será inyectado desde el archivo de configuración
+    private String SECRET_KEY;  // Clave secreta tomada del archivo de configuración
 
     // Genera un token a partir del nickname del usuario
     public String generateToken(String nickname) {
@@ -67,12 +67,12 @@ public class JwtUtil {
                 .getBody();
     }
 
-    
+    // Verifica si el token ha expirado
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    
+    // Extrae la fecha de expiración del token
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }

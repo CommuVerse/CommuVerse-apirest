@@ -1,10 +1,13 @@
 package com.CommuVerse.CommuVerse_api.service;
 
 import com.CommuVerse.CommuVerse_api.dto.ArticleDTO;
+import com.CommuVerse.CommuVerse_api.exception.ResourceNotFoundException;
 import com.CommuVerse.CommuVerse_api.mapper.ArticleMapper;
 import com.CommuVerse.CommuVerse_api.model.entity.Article;
+import com.CommuVerse.CommuVerse_api.model.entity.Tag;
 import com.CommuVerse.CommuVerse_api.model.entity.User;
 import com.CommuVerse.CommuVerse_api.repository.ArticleRepository;
+import com.CommuVerse.CommuVerse_api.repository.TagRepository;
 import com.CommuVerse.CommuVerse_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ArticleMapper articleMapper;
+    private final TagRepository tagRepository;  // Inyección del repositorio de etiquetas
 
     @Transactional
     public ArticleDTO createArticle(ArticleDTO dto) {
@@ -90,23 +94,26 @@ public class ArticleService {
         }
     }
 
-    public ArticleDTO updateArticle(Integer articleId, ArticleDTO articleDTO) {
-        Optional<Article> optionalArticle = articleRepository.findById(articleId);
 
-        if (!optionalArticle.isPresent()) {
-            return null;
-        }
+    public ArticleDTO assignTagsToArticle(Integer articleId, List<String> tagNames) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
-        Article articleToUpdate = optionalArticle.get();
+        // Asignar etiquetas al artículo
+        Set<Tag> tagsToAssign = tagNames.stream().map(tagName -> {
+            Tag tag = tagRepository.findByNombreEtiqueta(tagName).orElseGet(() -> {
+                // Crear nueva etiqueta si no existe
+                Tag newTag = new Tag();
+                newTag.setNombreEtiqueta(tagName);
+                return tagRepository.save(newTag);
+            });
+            return tag;
+        }).collect(Collectors.toSet());
 
-        articleToUpdate.setTitle(articleDTO.getTitle());
-        articleToUpdate.setContent(articleDTO.getContent());
-        articleToUpdate.setType(articleDTO.getType());
-        articleToUpdate.setScheduledDate(articleDTO.getScheduledDate());
-        articleToUpdate.setStatus(articleDTO.isStatus());
+        article.getTags().addAll(tagsToAssign);
+        articleRepository.save(article);
 
-        Article updatedArticle = articleRepository.save(articleToUpdate);
+        return articleMapper.toDTO(article);
 
-        return articleMapper.toDTO(updatedArticle);
     }
 }

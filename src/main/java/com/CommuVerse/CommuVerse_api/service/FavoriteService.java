@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FavoriteService {
@@ -62,5 +64,20 @@ public class FavoriteService {
             throw new RuntimeException("Artículo con ID " + id + " no encontrado en favoritos");
         }
         favoriteRepository.deleteById(id);
+    }
+    
+    public List<FavoriteDTO> getFavoritesByReaderId(Integer readerId) {
+    Optional<User> userOptional = userRepository.findById(readerId);
+
+    if (userOptional.isEmpty()) {
+        throw new RuntimeException("User with ID " + readerId + " not found");
+    }
+
+    User user = userOptional.get();
+    List<Favorite> favorites = favoriteRepository.findByReader(user);
+    
+    return favorites.stream()
+            .map(favoriteMapper::toDTO)
+            .collect(Collectors.toList());
     }
 }

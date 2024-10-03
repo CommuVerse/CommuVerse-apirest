@@ -40,4 +40,12 @@ public class ArticleController {
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
 
+    @PutMapping("/{articleId}/assignTags")
+    public ResponseEntity<ArticleDTO> assignTagsToArticle(
+            @PathVariable Integer articleId,
+            @RequestBody List<String> tagNames) {
+
+        ArticleDTO updatedArticle = articleService.assignTagsToArticle(articleId, tagNames);
+        return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
+    }
 }

@@ -1,6 +1,6 @@
 package com.CommuVerse.CommuVerse_api.service;
 
-import com.CommuVerse.CommuVerse_api.config.JwtUtil; // Asegúrate de tener esto importado
+import com.CommuVerse.CommuVerse_api.config.JwtUtil; 
 import com.CommuVerse.CommuVerse_api.dto.UserDTO;
 import com.CommuVerse.CommuVerse_api.mapper.UserMapper;
 import com.CommuVerse.CommuVerse_api.model.entity.User;
@@ -18,7 +18,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final JwtUtil jwtUtil; // Agrega JwtUtil aquí
+    private final JwtUtil jwtUtil; 
 
     @Transactional
     public User registerUser(UserDTO userDTO) {
@@ -49,6 +49,6 @@ public class UserService {
             return jwtUtil.generateToken(nickname); 
         }
 
-        return null;  // Retorna null si la autenticación falla
+        return null;  
     }
 }

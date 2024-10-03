@@ -32,7 +32,7 @@ public class SubscriptionPlanController {
     
         // Validar el token
         if (!jwtUtil.validateToken(token, nickname)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // Respuesta 401 si no es válido
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); 
         }
     
         SubscriptionPlanDTO createdPlan = subscriptionPlanService.createSubscriptionPlan(dto);

@@ -50,7 +50,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> role.name()); // Retorna el rol como autoridad
+        return List.of(() -> role.name()); 
     }
 
     @Override
@@ -60,26 +60,26 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // O puedes usar nickName o cualquier otro campo que desees
+        return email; 
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Cambia esto según tu lógica de negocio
+        return true; 
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Cambia esto según tu lógica de negocio
+        return true; 
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Cambia esto según tu lógica de negocio
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Cambia esto según tu lógica de negocio
+        return true;
     }
 }

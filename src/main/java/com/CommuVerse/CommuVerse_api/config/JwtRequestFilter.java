@@ -38,19 +38,19 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             nickname = jwtUtil.extractUsername(jwt);
         }
 
-        // Si el usuario no está autenticado y el nickname no es null, se establece el contexto de seguridad
+        
         if (nickname != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(nickname);
             // Valida el token
             if (jwtUtil.validateToken(jwt, nickname)) {
-                // Crea un objeto de autenticación y lo establece en el contexto de seguridad
+  
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        // Continúa con el siguiente filtro en la cadena
+
         chain.doFilter(request, response);
     }
 }

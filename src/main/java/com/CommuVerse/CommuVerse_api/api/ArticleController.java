@@ -26,7 +26,6 @@ public class ArticleController {
     public ResponseEntity<List<ArticleDTO>> searchArticles(@RequestParam String keyword) {
         List<ArticleDTO> articles = articleService.searchArticlesByKeyword(keyword);
 
-        // Verificar si la lista está vacía y devolver NO_CONTENT
         if (articles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

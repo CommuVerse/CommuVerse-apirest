@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Desactiva la protección CSRF
             .authorizeHttpRequests(authorize -> 
-                authorize.requestMatchers("/users/**").permitAll() // Permite acceso a la ruta de registro
+                authorize.requestMatchers("/users/**","/subscriptions/**").permitAll() // Permite acceso a la ruta de registro
                     .anyRequest().authenticated() // Requiere autenticación para otras rutas
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Agrega el filtro JWT antes del filtro de autenticación

@@ -61,5 +61,19 @@ public class SubscriptionService {
                 .map(subscriptionMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void cancelSubscription(Integer userId, Integer subscriptionId) {
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+            .orElseThrow(() -> new RuntimeException("Suscripción no encontrada."));
+
+        if (!subscription.getUser().getId().equals(userId)) {
+            throw new RuntimeException("No está autorizado a cancelar esta suscripción.");
+        }
+
+        subscription.setStatus("CANCELADA");
+        subscriptionRepository.save(subscription); 
+    }
+
 }
 

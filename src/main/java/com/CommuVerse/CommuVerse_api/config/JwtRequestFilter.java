@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String nickname = null;
         String jwt = null;
 
-        // Verifica si el token está presente en la cabecera de autorización
+        
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7); // Remueve "Bearer " del token
             nickname = jwtUtil.extractUsername(jwt);

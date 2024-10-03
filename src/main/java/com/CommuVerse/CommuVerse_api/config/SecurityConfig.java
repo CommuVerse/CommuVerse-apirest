@@ -13,17 +13,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter; // Inyección del filtro JWT
+    private JwtRequestFilter jwtRequestFilter; 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desactiva la protección CSRF
+            .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(authorize -> 
-                authorize.requestMatchers("/users/**","/subscriptions/**").permitAll() // Permite acceso a la ruta de registro
-                    .anyRequest().authenticated() // Requiere autenticación para otras rutas
+                authorize.requestMatchers("/users/**","/subscriptions/**").permitAll() 
+                    .anyRequest().authenticated() 
             )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Agrega el filtro JWT antes del filtro de autenticación
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -9,6 +9,7 @@ import com.CommuVerse.CommuVerse_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -55,4 +56,29 @@ public class UserController {
             return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
         }
     }
+@PutMapping("/profile/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")  // Requiere que el usuario esté autenticado
+    public ResponseEntity<UserDTO> updateProfile(@PathVariable int userId, @Valid @RequestBody UserDTO userDTO, @RequestHeader("Authorization") String token) {
+        // Validar el token y obtener el nickname del usuario autenticado
+        String extractedToken = token.substring(7);  // Quitar "Bearer " del token
+        String username = userService.extractUsernameFromToken(extractedToken);
+
+        // Asegurarse de que el usuario autenticado solo edite su propio perfil
+        if (!userService.isUserOwnerOfProfile(username, userId)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        // Actualizar el perfil
+        User updatedUser = userService.updateUserProfile(userId, userDTO);
+        UserDTO responseDTO = userMapper.toUserDTO(updatedUser);
+
+        // Mensaje de éxito con los cambios realizados
+        String message = "Los cambios han sido realizados con éxito. " +
+                            "Cambios: nickname: " + updatedUser.getNickName() + 
+                            ", biografía: " + updatedUser.getBio() + 
+                            ", foto de perfil: " + updatedUser.getProfilePicture();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
 }

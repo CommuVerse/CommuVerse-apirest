@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,5 +40,28 @@ public class ArticleController {
         ArticleDTO updatedArticle = articleService.editArticle(articleId, dto);
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
+    @GetMapping("/filter/type")
+    public ResponseEntity<List<ArticleDTO>> filterByType(@RequestParam String type) {
+        List<ArticleDTO> articles = articleService.filterArticlesByType(type);
+
+        if (articles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/publication-date")
+public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam String date) {
+    LocalDate publicationDate = LocalDate.parse(date);
+    List<ArticleDTO> articles = articleService.filterArticlesByPublicationDate(publicationDate);
+
+    if (articles.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    return new ResponseEntity<>(articles, HttpStatus.OK);
+}
+
 
 }

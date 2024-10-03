@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,5 +52,18 @@ public class ArticleService {
 
         return articleMapper.toDTO(updatedArticle);
     }
+    public List<ArticleDTO> filterArticlesByType(String type) {
+        List<Article> articles = articleRepository.findByType(type);
+        return articles.stream()
+                .map(articleMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ArticleDTO> filterArticlesByPublicationDate(LocalDate date) {
+    List<Article> articles = articleRepository.findByPublicationDateAfter(date.atStartOfDay());
+    return articles.stream()
+            .map(articleMapper::toDTO)
+            .collect(Collectors.toList());
+}
 
 }

@@ -1,5 +1,7 @@
 package com.CommuVerse.CommuVerse_api.api;
 
+import com.CommuVerse.CommuVerse_api.config.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import com.CommuVerse.CommuVerse_api.dto.ArticleDTO;
 import com.CommuVerse.CommuVerse_api.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 @RestController
@@ -16,6 +18,7 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/create")
     public ResponseEntity<ArticleDTO> createArticle(@RequestBody ArticleDTO dto) {
@@ -62,6 +65,39 @@ public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam St
 
     return new ResponseEntity<>(articles, HttpStatus.OK);
 }
+
+
+    @GetMapping("/{articleId}/showArticle")
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable Integer articleId){
+        ArticleDTO article = articleService.getArticle(articleId);
+        if (article == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(article, HttpStatus.OK);
+       }
+
+    @DeleteMapping("/{articleId}/deleteArticle")
+    public ResponseEntity<Void> deleteArticleById(@PathVariable Integer articleId) {
+        boolean isDeleted = articleService.deleteArticle(articleId);
+
+        if (!isDeleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{articleId}/updateArticle")
+    public ResponseEntity<ArticleDTO> updateArticleById(@PathVariable Integer articleId, @RequestBody ArticleDTO articleDTO) {
+
+        ArticleDTO updatedArticle = articleService.updateArticle(articleId, articleDTO);
+
+        if (updatedArticle == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
+    }
 
 
 }

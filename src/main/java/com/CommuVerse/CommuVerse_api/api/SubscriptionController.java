@@ -5,6 +5,9 @@ import com.CommuVerse.CommuVerse_api.dto.SubscriptionDTO;
 import com.CommuVerse.CommuVerse_api.service.SubscriptionService; 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +56,52 @@ public class SubscriptionController {
         
         return ResponseEntity.ok(updatedSubscription); 
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getSubscriptionsByUserId(
+            @RequestHeader("Authorization") String authHeader, 
+            @PathVariable Integer userId) {
+        
+        String token = authHeader.substring(7);
+        String nickname = jwtUtil.extractUsername(token);
+
+        // Validar el token
+        if (!jwtUtil.validateToken(token, nickname)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        List<SubscriptionDTO> subscriptions = subscriptionService.getSubscriptionsByUserId(userId);
+    
+        if (subscriptions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No hay suscripciones activas para este usuario.");
+        }
+    
+        return ResponseEntity.ok(subscriptions);
+    }
+    
+    @DeleteMapping("/user/{userId}/{subscriptionId}")
+    public ResponseEntity<String> cancelSubscription(
+            @RequestHeader("Authorization") String authHeader, 
+            @PathVariable Integer userId,
+            @PathVariable Integer subscriptionId) {
+
+        String token = authHeader.substring(7); 
+        String nickname = jwtUtil.extractUsername(token); 
+
+        if (!jwtUtil.validateToken(token, nickname)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            subscriptionService.cancelSubscription(userId, subscriptionId);
+            return ResponseEntity.ok("Suscripción cancelada con éxito.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al cancelar la suscripción: " + e.getMessage());
+        }
+    }
+
+
+
 }
     

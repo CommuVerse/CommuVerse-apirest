@@ -25,7 +25,7 @@ public class FavoriteService {
     private final ArticleRepository articleRepository;
     private final FavoriteMapper favoriteMapper;
 
-    @Autowired
+
     public FavoriteService(FavoriteRepository favoriteRepository,
                            UserRepository userRepository,
                            ArticleRepository articleRepository,

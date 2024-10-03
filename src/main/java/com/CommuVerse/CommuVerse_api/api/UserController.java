@@ -68,11 +68,11 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        // Actualizar el perfil
+
         User updatedUser = userService.updateUserProfile(userId, userDTO);
         UserDTO responseDTO = userMapper.toUserDTO(updatedUser);
 
-        // Mensaje de éxito con los cambios realizados
+
         String message = "Los cambios han sido realizados con éxito. " +
                             "Cambios: nickname: " + updatedUser.getNickName() + 
                             ", biografía: " + updatedUser.getBio() + 

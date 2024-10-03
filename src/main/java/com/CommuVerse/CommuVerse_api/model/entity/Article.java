@@ -1,6 +1,7 @@
 package com.CommuVerse.CommuVerse_api.model.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -43,4 +44,5 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User creator;
+    
 }

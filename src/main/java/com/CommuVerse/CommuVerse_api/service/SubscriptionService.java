@@ -8,6 +8,10 @@ import com.CommuVerse.CommuVerse_api.model.entity.Subscription;
 import com.CommuVerse.CommuVerse_api.mapper.SubscriptionMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 
@@ -48,6 +52,14 @@ public class SubscriptionService {
         // Guarda la suscripción actualizada
         Subscription updatedSubscription = subscriptionRepository.save(subscription);
         return subscriptionMapper.toDto(updatedSubscription); // Retorna el DTO actualizado
+    }
+    
+    @Transactional
+    public List<SubscriptionDTO> getSubscriptionsByUserId(Integer userId) {
+        List<Subscription> subscriptions = subscriptionRepository.findByUserId(userId);
+        return subscriptions.stream()
+                .map(subscriptionMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
 

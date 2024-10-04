@@ -9,7 +9,6 @@ import com.CommuVerse.CommuVerse_api.model.entity.User;
 import com.CommuVerse.CommuVerse_api.repository.FavoriteRepository;
 import com.CommuVerse.CommuVerse_api.repository.ArticleRepository;
 import com.CommuVerse.CommuVerse_api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

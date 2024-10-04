@@ -56,7 +56,6 @@ public class CommentService {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
-        // Verificar si el comentario está dentro de los 10 minutos permitidos
         if (Duration.between(existingComment.getCreatedAt(), LocalDateTime.now()).toMinutes() > 10) {
             throw new RuntimeException("Time limit for editing the comment has passed");
         }
@@ -72,7 +71,7 @@ public class CommentService {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
-        // Verificar si el comentario está dentro de los 10 minutos permitidos
+   
         if (Duration.between(existingComment.getCreatedAt(), LocalDateTime.now()).toMinutes() > 10) {
             throw new RuntimeException("Time limit for deleting the comment has passed");
         }

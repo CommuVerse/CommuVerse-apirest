@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -27,12 +26,12 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ArticleMapper articleMapper;
-    private final TagRepository tagRepository;  // Inyección del repositorio de etiquetas
+    private final TagRepository tagRepository;
 
     @Transactional
     public ArticleDTO createArticle(ArticleDTO dto) {
         User creator = userRepository.findById(dto.getCreatorId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Article article = articleMapper.toEntity(dto);
         article.setCreator(creator);
@@ -51,7 +50,7 @@ public class ArticleService {
     @Transactional
     public ArticleDTO editArticle(Integer articleId, ArticleDTO dto) {
         Article existingArticle = articleRepository.findById(articleId)
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
         existingArticle.setTitle(dto.getTitle());
         existingArticle.setContent(dto.getContent());
@@ -59,6 +58,7 @@ public class ArticleService {
 
         return articleMapper.toDTO(updatedArticle);
     }
+
     public List<ArticleDTO> filterArticlesByType(String type) {
         List<Article> articles = articleRepository.findByType(type);
         return articles.stream()
@@ -67,24 +67,20 @@ public class ArticleService {
     }
 
     public List<ArticleDTO> filterArticlesByPublicationDate(LocalDate date) {
-    List<Article> articles = articleRepository.findByPublicationDateAfter(date.atStartOfDay());
-    return articles.stream()
-            .map(articleMapper::toDTO)
-            .collect(Collectors.toList());
-}
+        List<Article> articles = articleRepository.findByPublicationDateAfter(date.atStartOfDay());
+        return articles.stream()
+                .map(articleMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public ArticleDTO getArticle(Integer articleId) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new RuntimeException("Article not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
         return articleMapper.toDTO(article);
     }
 
-    public ArticleDTO getArticleDetails(Integer articleId) {
-
-        return null;
-    }
-
+    @Transactional
     public boolean deleteArticle(Integer articleId) {
         if (articleRepository.existsById(articleId)) {
             articleRepository.deleteById(articleId);
@@ -94,7 +90,19 @@ public class ArticleService {
         }
     }
 
+    @Transactional
+    public ArticleDTO updateArticle(Integer articleId, ArticleDTO articleDTO) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
+        article.setTitle(articleDTO.getTitle());
+        article.setContent(articleDTO.getContent());
+        Article updatedArticle = articleRepository.save(article);
+
+        return articleMapper.toDTO(updatedArticle);
+    }
+
+    @Transactional
     public ArticleDTO assignTagsToArticle(Integer articleId, List<String> tagNames) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
@@ -102,7 +110,6 @@ public class ArticleService {
         // Asignar etiquetas al artículo
         Set<Tag> tagsToAssign = tagNames.stream().map(tagName -> {
             Tag tag = tagRepository.findByNombreEtiqueta(tagName).orElseGet(() -> {
-                // Crear nueva etiqueta si no existe
                 Tag newTag = new Tag();
                 newTag.setNombreEtiqueta(tagName);
                 return tagRepository.save(newTag);
@@ -114,6 +121,5 @@ public class ArticleService {
         articleRepository.save(article);
 
         return articleMapper.toDTO(article);
-
     }
 }

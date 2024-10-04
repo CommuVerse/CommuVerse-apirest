@@ -1,15 +1,12 @@
 package com.CommuVerse.CommuVerse_api.api;
 
-import com.CommuVerse.CommuVerse_api.config.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import com.CommuVerse.CommuVerse_api.dto.ArticleDTO;
 import com.CommuVerse.CommuVerse_api.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,14 +15,15 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final JwtUtil jwtUtil;
 
+    // Crear un artículo
     @PostMapping("/create")
     public ResponseEntity<ArticleDTO> createArticle(@RequestBody ArticleDTO dto) {
         ArticleDTO createdArticle = articleService.createArticle(dto);
         return new ResponseEntity<>(createdArticle, HttpStatus.CREATED);
     }
 
+    // Buscar artículos por palabra clave
     @GetMapping("/search")
     public ResponseEntity<List<ArticleDTO>> searchArticles(@RequestParam String keyword) {
         List<ArticleDTO> articles = articleService.searchArticlesByKeyword(keyword);
@@ -36,13 +34,15 @@ public class ArticleController {
 
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
+
+    // Editar un artículo por su ID
     @PutMapping("/{articleId}/edit")
-    public ResponseEntity<ArticleDTO> editArticle(
-            @PathVariable Integer articleId,
-            @RequestBody ArticleDTO dto) {
+    public ResponseEntity<ArticleDTO> editArticle(@PathVariable Integer articleId, @RequestBody ArticleDTO dto) {
         ArticleDTO updatedArticle = articleService.editArticle(articleId, dto);
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
+
+    // Filtrar artículos por tipo
     @GetMapping("/filter/type")
     public ResponseEntity<List<ArticleDTO>> filterByType(@RequestParam String type) {
         List<ArticleDTO> articles = articleService.filterArticlesByType(type);
@@ -54,29 +54,32 @@ public class ArticleController {
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
+    // Filtrar artículos por fecha de publicación
     @GetMapping("/filter/publication-date")
-public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam String date) {
-    LocalDate publicationDate = LocalDate.parse(date);
-    List<ArticleDTO> articles = articleService.filterArticlesByPublicationDate(publicationDate);
+    public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam String date) {
+        LocalDate publicationDate = LocalDate.parse(date);  // Asegúrate de que el formato sea yyyy-MM-dd
+        List<ArticleDTO> articles = articleService.filterArticlesByPublicationDate(publicationDate);
 
-    if (articles.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    return new ResponseEntity<>(articles, HttpStatus.OK);
-}
-
-
-    @GetMapping("/{articleId}/showArticle")
-    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable Integer articleId){
-        ArticleDTO article = articleService.getArticle(articleId);
-        if (article == null) {
+        if (articles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(article, HttpStatus.OK);
-        }
 
-    @DeleteMapping("/{articleId}/deleteArticle")
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+    // Obtener un artículo por su ID
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable Integer articleId) {
+        ArticleDTO article = articleService.getArticle(articleId);
+
+        if (article == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(article, HttpStatus.OK);
+    }
+
+    // Eliminar un artículo por su ID
+    @DeleteMapping("/{articleId}")
     public ResponseEntity<Void> deleteArticleById(@PathVariable Integer articleId) {
         boolean isDeleted = articleService.deleteArticle(articleId);
 
@@ -87,9 +90,9 @@ public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam St
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{articleId}/updateArticle")
+    // Actualizar un artículo por su ID
+    @PutMapping("/{articleId}")
     public ResponseEntity<ArticleDTO> updateArticleById(@PathVariable Integer articleId, @RequestBody ArticleDTO articleDTO) {
-
         ArticleDTO updatedArticle = articleService.updateArticle(articleId, articleDTO);
 
         if (updatedArticle == null) {
@@ -99,12 +102,9 @@ public ResponseEntity<List<ArticleDTO>> filterByPublicationDate(@RequestParam St
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
 
-
+    // Asignar etiquetas a un artículo
     @PutMapping("/{articleId}/assignTags")
-    public ResponseEntity<ArticleDTO> assignTagsToArticle(
-            @PathVariable Integer articleId,
-            @RequestBody List<String> tagNames) {
-
+    public ResponseEntity<ArticleDTO> assignTagsToArticle(@PathVariable Integer articleId, @RequestBody List<String> tagNames) {
         ArticleDTO updatedArticle = articleService.assignTagsToArticle(articleId, tagNames);
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }

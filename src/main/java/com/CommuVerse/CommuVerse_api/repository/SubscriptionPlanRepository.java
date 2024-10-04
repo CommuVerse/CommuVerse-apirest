@@ -10,5 +10,6 @@ import java.util.List;
 public interface SubscriptionPlanRepository extends JpaRepository<SubscriptionPlan, Integer> {
     SubscriptionPlan findByName(String name);
 
+
     List<SubscriptionPlan> findByCreator_Id(Integer userId);
 }

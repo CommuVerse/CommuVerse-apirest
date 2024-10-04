@@ -1,9 +1,12 @@
 package com.CommuVerse.CommuVerse_api.model.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -43,4 +46,12 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User creator;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "article_tags",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag-id")
+    )
+    private Set<Tag> tags = new HashSet<>();
 }

@@ -6,6 +6,7 @@ import com.CommuVerse.CommuVerse_api.model.entity.SubscriptionPlan;
 import com.CommuVerse.CommuVerse_api.repository.SubscriptionPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,4 +41,33 @@ public class SubscriptionPlanService {
                     .map(subscriptionPlanMapper::toDTO) // Convertir cada entidad en DTO
                     .collect(Collectors.toList());
     }
+
+    public SubscriptionPlanDTO modifySubscriptionPlan(Integer id, SubscriptionPlanDTO dto) {
+        Optional<SubscriptionPlan> existingPlanOpt = subscriptionPlanRepository.findById(id);
+        if (existingPlanOpt.isPresent()) {
+            SubscriptionPlan existingPlan = existingPlanOpt.get();
+            
+            // Actualizar los campos
+            existingPlan.setName(dto.getName());
+            existingPlan.setDescription(dto.getDescription());
+            existingPlan.setPrice(dto.getPrice());
+            existingPlan.setRenewalPeriod(dto.getRenewalPeriod());
+            existingPlan.setLevel(dto.getLevel());
+            
+            // Guardar el plan actualizado
+            SubscriptionPlan updatedPlan = subscriptionPlanRepository.save(existingPlan);
+            return subscriptionPlanMapper.toDTO(updatedPlan);
+        }
+        return null; 
+    }
+
+        // Método para eliminar un plan de suscripción
+        public boolean deleteSubscriptionPlan(Integer id) {
+            if (subscriptionPlanRepository.existsById(id)) {
+                subscriptionPlanRepository.deleteById(id);
+                return true; 
+            }
+            return false; 
+        }
+    
 }

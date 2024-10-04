@@ -23,7 +23,7 @@ public class CommentController {
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
 
- 
+
     @GetMapping("/article/{articleId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByArticle(@PathVariable Integer articleId) {
         List<CommentDTO> comments = commentService.getCommentsByArticle(articleId);
@@ -32,7 +32,6 @@ public class CommentController {
         }
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
-
 
     @PutMapping("/{commentId}/edit")
     public ResponseEntity<CommentDTO> editComment(@PathVariable Integer commentId, @RequestBody CommentDTO dto) {

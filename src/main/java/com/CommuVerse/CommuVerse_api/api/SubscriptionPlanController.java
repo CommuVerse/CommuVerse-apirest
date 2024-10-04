@@ -40,7 +40,7 @@ public class SubscriptionPlanController {
     }
     
 
-    // Obtener todos los planes de suscripción
+
     @GetMapping
     public ResponseEntity<List<SubscriptionPlanDTO>> getAllSubscriptionPlans() {
         List<SubscriptionPlanDTO> plans = subscriptionPlanService.getAllSubscriptionPlans();
@@ -76,6 +76,7 @@ public ResponseEntity<List<SubscriptionPlanDTO>> getSubscriptionPlansByUserId(
     return new ResponseEntity<>(plans, HttpStatus.OK); 
 }
 
+
     @PutMapping("{id}")
     public ResponseEntity<SubscriptionPlanDTO> modifySubscriptionPlan(
             @RequestHeader("Authorization") String authHeader, // Obtiene el encabezado de autorización
@@ -85,6 +86,7 @@ public ResponseEntity<List<SubscriptionPlanDTO>> getSubscriptionPlansByUserId(
         // Verifica que el encabezado no sea nulo y que tenga el formato adecuado
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); 
+
         }
     
         String token = authHeader.substring(7); // Eliminar "Bearer " del encabezado

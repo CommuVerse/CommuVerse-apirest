@@ -16,11 +16,13 @@ public class CommentController {
 
     private final CommentService commentService;
 
+
     @PostMapping("/add")
     public ResponseEntity<CommentDTO> addComment(@RequestBody CommentDTO dto) {
         CommentDTO createdComment = commentService.addComment(dto);
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/article/{articleId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByArticle(@PathVariable Integer articleId) {
@@ -36,6 +38,7 @@ public class CommentController {
         CommentDTO updatedComment = commentService.editComment(commentId, dto);
         return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{commentId}/delete")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer commentId) {

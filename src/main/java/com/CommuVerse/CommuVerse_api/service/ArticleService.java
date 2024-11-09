@@ -91,33 +91,20 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDTO updateArticle(Integer articleId, ArticleDTO articleDTO) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
-
-        article.setTitle(articleDTO.getTitle());
-        article.setContent(articleDTO.getContent());
-        Article updatedArticle = articleRepository.save(article);
-
-        return articleMapper.toDTO(updatedArticle);
-    }
-
-    @Transactional
-    public ArticleDTO assignTagsToArticle(Integer articleId, List<String> tagNames) {
+    public ArticleDTO assignTagsToArticle(Integer articleId, String tagName, String descripcion) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
         // Asignar etiquetas al artículo
-        Set<Tag> tagsToAssign = tagNames.stream().map(tagName -> {
+
             Tag tag = tagRepository.findByNombreEtiqueta(tagName).orElseGet(() -> {
                 Tag newTag = new Tag();
                 newTag.setNombreEtiqueta(tagName);
+                newTag.setDescripcion(descripcion);
                 return tagRepository.save(newTag);
             });
-            return tag;
-        }).collect(Collectors.toSet());
 
-        article.getTags().addAll(tagsToAssign);
+        article.setTag(tag);  // Asignar la etiqueta al artículo
         articleRepository.save(article);
 
         return articleMapper.toDTO(article);

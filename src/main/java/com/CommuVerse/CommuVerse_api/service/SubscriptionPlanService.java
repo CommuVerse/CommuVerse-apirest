@@ -51,7 +51,7 @@ public class SubscriptionPlanService {
             existingPlan.setName(dto.getName());
             existingPlan.setDescription(dto.getDescription());
             existingPlan.setPrice(dto.getPrice());
-            existingPlan.setRenewalPeriod(dto.getRenewalPeriod());
+            existingPlan.setDuration_days(dto.getDuration_days());
             existingPlan.setLevel(dto.getLevel());
             
             // Guardar el plan actualizado

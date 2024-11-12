@@ -17,7 +17,7 @@ public class SubscriptionPlanDTO {
     private String name;
     private String description;
     private BigDecimal price;
-    private String renewalPeriod;
+    private Integer duration_days;
     private SubscriptionLevel level;
     private User creator;
 }

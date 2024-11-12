@@ -31,8 +31,8 @@ public class SubscriptionPlan {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "renewal_period", nullable = false)
-    private String renewalPeriod; 
+    @Column(name = "duration_days", nullable = false)
+    private Integer duration_days; 
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

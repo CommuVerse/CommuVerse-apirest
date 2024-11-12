@@ -3,6 +3,8 @@ package com.CommuVerse.CommuVerse_api.service.impl;
 import com.CommuVerse.CommuVerse_api.dto.PaymentCaptureResponse;
 import com.CommuVerse.CommuVerse_api.dto.PaymentOrderResponse;
 import com.CommuVerse.CommuVerse_api.dto.SubscriptionDTO;
+import com.CommuVerse.CommuVerse_api.integration.notification.email.dto.Mail;
+import com.CommuVerse.CommuVerse_api.integration.notification.email.service.EmailService;
 import com.CommuVerse.CommuVerse_api.integration.paymentPayPal.dto.OrderCaptureResponse;
 import com.CommuVerse.CommuVerse_api.integration.paymentPayPal.dto.OrderResponse;
 import com.CommuVerse.CommuVerse_api.integration.paymentPayPal.service.PayPalService;
@@ -27,11 +29,11 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     private final PayPalService payPalService;
     private final SubscriptionService subscriptionService;
-    //private final EmailService emailService;
+    private final EmailService emailService;
     private final SubscriptionRepository subscriptionRepository;
 
-   // @Value("${spring.mail.username}")
-    //private String mailFrom;
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
     @Override
     public PaymentOrderResponse createPayment(Integer subscriptionId, String returnUrl, String cancelUrl) {
@@ -80,12 +82,12 @@ public class CheckoutServiceImpl implements CheckoutService {
         model.put("total", subscription.getSubscriptionPlan().getPrice());
         model.put("endDate", formattedEndDate);
 
- //       Mail mail = emailService.createMail(
- //               userEmail,
- //               "Confirmación de Pago de Suscripción",
- //               model,
- //               mailFrom
- //       );
- //       emailService.sendMail(mail,"email/subscription-confirmation-template");
+       Mail mail = emailService.createMail(
+                userEmail,
+                "Confirmación de Pago de Suscripción",
+                model,
+                mailFrom
+        );
+        emailService.sendMail(mail,"email/subscription-confirmation-template");
     }
 }

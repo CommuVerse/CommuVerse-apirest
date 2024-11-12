@@ -83,4 +83,16 @@ public class UserController {
             return new ResponseEntity<>("Token inválido o no encontrado.", HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @DeleteMapping("/{id}/deleteUser")
+    public ResponseEntity<String> deleteUser(@PathVariable int id){
+        boolean isDeleted = userService.deleteUserAccount(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("La cuenta del usuario ha sido  eliminada correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar la cuenta del usuario.");
+        }
+    }
+
 }

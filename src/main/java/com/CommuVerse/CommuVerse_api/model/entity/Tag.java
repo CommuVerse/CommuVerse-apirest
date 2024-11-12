@@ -3,9 +3,6 @@ package com.CommuVerse.CommuVerse_api.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tags")
 @Data
@@ -15,12 +12,25 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "nombreEtiqueta", nullable = false, length = 150)
     private String nombreEtiqueta;
 
-    @Column
+    @Column(name = "descripcion", nullable = false, length = 260)
     private String descripcion;
 
-    @ManyToMany(mappedBy = "tags")
-    private Set<Article> articles = new HashSet<>();
+    public String getNombreEtiqueta() {
+        return nombreEtiqueta;
+    }
+
+    public void setNombreEtiqueta(String nombreEtiqueta) {
+        this.nombreEtiqueta = nombreEtiqueta;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }

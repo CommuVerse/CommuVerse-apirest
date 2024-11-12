@@ -1,6 +1,7 @@
 package com.CommuVerse.CommuVerse_api.api;
 
 import com.CommuVerse.CommuVerse_api.dto.ArticleDTO;
+import com.CommuVerse.CommuVerse_api.dto.TagDTO;
 import com.CommuVerse.CommuVerse_api.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -79,7 +80,7 @@ public class ArticleController {
     }
 
     // Eliminar un artículo por su ID
-    @DeleteMapping("/{articleId}")
+    @DeleteMapping("/{articleId}/deleteArticle")
     public ResponseEntity<Void> deleteArticleById(@PathVariable Integer articleId) {
         boolean isDeleted = articleService.deleteArticle(articleId);
 
@@ -90,22 +91,13 @@ public class ArticleController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Actualizar un artículo por su ID
-    @PutMapping("/{articleId}")
-    public ResponseEntity<ArticleDTO> updateArticleById(@PathVariable Integer articleId, @RequestBody ArticleDTO articleDTO) {
-        ArticleDTO updatedArticle = articleService.updateArticle(articleId, articleDTO);
-
-        if (updatedArticle == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
-    }
-
     // Asignar etiquetas a un artículo
     @PutMapping("/{articleId}/assignTags")
-    public ResponseEntity<ArticleDTO> assignTagsToArticle(@PathVariable Integer articleId, @RequestBody List<String> tagNames) {
-        ArticleDTO updatedArticle = articleService.assignTagsToArticle(articleId, tagNames);
+    public ResponseEntity<ArticleDTO> assignTagsToArticle(
+            @PathVariable Integer articleId,
+            @RequestBody TagDTO tagDTO) {
+        ArticleDTO updatedArticle = articleService.assignTagsToArticle(articleId, tagDTO.getNombreEtiqueta(), tagDTO.getDescripcion());
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
+
 }

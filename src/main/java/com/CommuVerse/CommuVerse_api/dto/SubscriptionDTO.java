@@ -1,17 +1,20 @@
 package com.CommuVerse.CommuVerse_api.dto;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import com.CommuVerse.CommuVerse_api.model.enums.PaymentStatus;
+import com.CommuVerse.CommuVerse_api.model.enums.SubscriptionStatus;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data 
-@NoArgsConstructor 
-@AllArgsConstructor 
 public class SubscriptionDTO {
 
     private Integer id; 
     private Integer userId;
-    private Integer subscriptionPlanId;
-    private String startDate; 
-    private String status;
+    private Integer subscriptionPlanId; 
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private PaymentStatus paymentStatus;
+    private SubscriptionStatus subscriptionStatus;
 }

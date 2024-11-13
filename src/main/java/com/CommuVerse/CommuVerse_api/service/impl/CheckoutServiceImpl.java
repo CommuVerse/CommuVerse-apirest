@@ -83,7 +83,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         model.put("endDate", formattedEndDate);
 
        Mail mail = emailService.createMail(
-                userEmail,
+                subscription.getUser().getEmail(),
                 "Confirmación de Pago de Suscripción",
                 model,
                 mailFrom

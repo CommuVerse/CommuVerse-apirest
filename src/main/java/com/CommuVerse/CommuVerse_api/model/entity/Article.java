@@ -47,11 +47,15 @@ public class Article {
     @JoinColumn(name = "user_id", nullable = false)
     private User creator;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "article_tags",
-            joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag-id")
-    )
-    private Set<Tag> tags = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
 }

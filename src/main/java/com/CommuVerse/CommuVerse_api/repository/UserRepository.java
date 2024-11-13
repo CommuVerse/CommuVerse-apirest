@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByNickName(String nickname);
 
     void deleteById(int userId);
-
+    
 }
 

@@ -99,16 +99,4 @@ public class UserService {
                 .map(User::getName)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
-
-    public boolean deleteUserAccount(int userId) {
-        try{
-            userRepository.deleteById(userId);
-            System.out.println("El usuario con ID" + userId + "ha sido eliminado.");
-            return true;
-        } catch (Exception e){
-            System.err.println("Error al eliminar el usuario" + e.getMessage());
-            return false;
-        }
-    }
 }
-

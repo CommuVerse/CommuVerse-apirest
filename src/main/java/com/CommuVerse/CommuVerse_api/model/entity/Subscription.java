@@ -1,14 +1,15 @@
 package com.CommuVerse.CommuVerse_api.model.entity;
-
-import com.CommuVerse.CommuVerse_api.model.enums.PaymentStatus; 
-import com.CommuVerse.CommuVerse_api.model.enums.SubscriptionStatus;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import java.time.LocalDateTime; // Asegúrate de importar LocalDateTime correctamente
+import java.time.LocalDate;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "subscriptions")
+@NoArgsConstructor
+@AllArgsConstructor 
 public class Subscription {
 
     @Id
@@ -23,18 +24,6 @@ public class Subscription {
     @JoinColumn(name = "subscription_plan_id", nullable = false)
     private SubscriptionPlan subscriptionPlan;
     
-    @Column(name = "start_at", nullable = false)
-    private LocalDateTime startAt; 
-
-    @Column(name = "end_at", nullable = false)
-    private LocalDateTime endAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status", nullable = false)
-    private PaymentStatus paymentStatus;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "subscription_status", nullable = false)
-    private SubscriptionStatus subscriptionStatus;
-
+    private LocalDate startDate; // Fecha de inicio de la suscripción
+    private String status; // Estado de la suscripción (por ejemplo, "Activo", "Cancelado")
 }

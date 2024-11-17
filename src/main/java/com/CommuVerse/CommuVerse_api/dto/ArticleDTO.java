@@ -1,7 +1,9 @@
 package com.CommuVerse.CommuVerse_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,5 +45,6 @@ public class ArticleDTO {
 
     private LocalDateTime scheduledDate;
 
+    @NotNull (message = "El ID del creador no puede ser nulo")
     private Integer creatorId;
 }

@@ -33,8 +33,11 @@ public class ArticleService {
         User creator = userRepository.findById(dto.getCreatorId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        Tag tag = findOrCreateTag(dto.getType(), "Descripción automática para la etiqueta: " + dto.getType());
+
         Article article = articleMapper.toEntity(dto);
         article.setCreator(creator);
+        article.setTag(tag);
 
         Article savedArticle = articleRepository.save(article);
         return articleMapper.toDTO(savedArticle);
@@ -96,17 +99,21 @@ public class ArticleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
         // Asignar etiquetas al artículo
+        Tag tag = findOrCreateTag(tagName, descripcion);
 
-            Tag tag = tagRepository.findByNombreEtiqueta(tagName).orElseGet(() -> {
-                Tag newTag = new Tag();
-                newTag.setNombreEtiqueta(tagName);
-                newTag.setDescripcion(descripcion);
-                return tagRepository.save(newTag);
-            });
-
-        article.setTag(tag);  // Asignar la etiqueta al artículo
+        article.setTag(tag);
         articleRepository.save(article);
 
         return articleMapper.toDTO(article);
+    }
+
+    private Tag findOrCreateTag(String tagName, String descripcion) {
+        return tagRepository.findByNombreEtiqueta(tagName)
+                .orElseGet(() -> {
+                    Tag newTag = new Tag();
+                    newTag.setNombreEtiqueta(tagName);
+                    newTag.setDescripcion(descripcion);
+                    return tagRepository.save(newTag);
+                });
     }
 }

@@ -116,4 +116,13 @@ public class ArticleService {
                     return tagRepository.save(newTag);
                 });
     }
+
+    @Transactional(readOnly = true)
+    public List<ArticleDTO> getAllArticles() {
+        List<Article> articles = articleRepository.findAll();  // Obtener todos los artículos desde la base de datos
+        return articles.stream()  // Convertir la lista de artículos a DTOs
+                .map(articleMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
 }

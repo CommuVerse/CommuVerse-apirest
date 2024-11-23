@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Data
@@ -32,6 +32,8 @@ public class ArticleDTO {
     @NotBlank(message = "El contenido no puede estar en blanco.")
     @Size(min = 50, message = "El contenido debe ser mayor a 50 caracteres")
     private String content;
+
+    private List<String> images;
 
     private LocalDateTime publicationDate;
 

@@ -24,9 +24,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> 
                 authorize
                     // Permitir acceso sin autenticación a los recursos de Swagger y OpenAPI
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                    
-                    // Permitir acceso sin autenticación a los endpoints de usuarios y suscripciones
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/v1/auth/login","/api/v1/auth/register").permitAll()
+
+                        .requestMatchers("/api/v1/articles/**").authenticated()
+
+                        // Permitir acceso sin autenticación a los endpoints de usuarios y suscripciones
                     .requestMatchers("/users/**", "/subscriptions/**").permitAll()
                     .requestMatchers("/mail/**").permitAll()
                     // Cualquier otro endpoint debe ser autenticado

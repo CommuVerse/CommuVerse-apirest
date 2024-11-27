@@ -2,6 +2,8 @@ package com.CommuVerse.CommuVerse_api.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -42,6 +44,10 @@ public class Article {
 
     @Column(name = "scheduled_date", nullable = false)
     private LocalDateTime scheduledDate;
+
+    // O para múltiples imágenes
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ArticleImage> images = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

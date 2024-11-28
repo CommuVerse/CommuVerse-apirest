@@ -100,4 +100,15 @@ public class ArticleController {
         return new ResponseEntity<>(updatedArticle, HttpStatus.OK);
     }
 
+    // Obtener todos los artículos
+    @GetMapping("/seeArticle")
+    public ResponseEntity<List<ArticleDTO>> getAllArticles() {
+        List<ArticleDTO> articles = articleService.getAllArticles();
+        if (articles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(articles, HttpStatus.OK);
+    }
+
+
 }

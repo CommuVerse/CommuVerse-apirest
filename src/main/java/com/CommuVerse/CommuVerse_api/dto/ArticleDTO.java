@@ -1,13 +1,15 @@
 package com.CommuVerse.CommuVerse_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,6 +33,8 @@ public class ArticleDTO {
     @Size(min = 50, message = "El contenido debe ser mayor a 50 caracteres")
     private String content;
 
+    private List<String> images;
+
     private LocalDateTime publicationDate;
 
     private boolean status;
@@ -43,5 +47,6 @@ public class ArticleDTO {
 
     private LocalDateTime scheduledDate;
 
+    @NotNull (message = "El ID del creador no puede ser nulo")
     private Integer creatorId;
 }

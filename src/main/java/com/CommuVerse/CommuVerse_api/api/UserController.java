@@ -3,6 +3,7 @@ package com.CommuVerse.CommuVerse_api.api;
 import com.CommuVerse.CommuVerse_api.dto.UserDTO;
 import com.CommuVerse.CommuVerse_api.dto.auth.AuthRequest;
 import com.CommuVerse.CommuVerse_api.dto.auth.AuthResponse;
+import com.CommuVerse.CommuVerse_api.exception.ResourceNotFoundException;
 import com.CommuVerse.CommuVerse_api.mapper.UserMapper;
 import com.CommuVerse.CommuVerse_api.model.entity.User;
 import com.CommuVerse.CommuVerse_api.service.UserService;
@@ -30,28 +31,33 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
-        String nickname = authRequest.getNickName();
-        String password = authRequest.getPassword();
+public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
+    String nickname = authRequest.getNickName();
+    String password = authRequest.getPassword();
 
-        String token = userService.authenticate(nickname, password);
+    String token = userService.authenticate(nickname, password);
 
-        if (token != null) {
-            AuthResponse authResponse = AuthResponse.builder()
-                    .token(token)
-                    .nickName(nickname)
-                    .build();
+    if (token != null) {
+        User user = userService.findByNickName(nickname)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-            return ResponseEntity.ok(authResponse);
-        } else {
-            AuthResponse authResponse = AuthResponse.builder()
-                    .nickName(nickname)
-                    .message("Nickname o contraseña incorrectos")
-                    .build();
+        AuthResponse authResponse = AuthResponse.builder()
+                .token(token)
+                .nickName(user.getNickName())
+                .id(user.getId()) // Incluye el ID del usuario
+                .build();
 
-            return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
-        }
+        return ResponseEntity.ok(authResponse);
+    } else {
+        AuthResponse authResponse = AuthResponse.builder()
+                .nickName(nickname)
+                .message("Nickname o contraseña incorrectos")
+                .build();
+
+        return new ResponseEntity<>(authResponse, HttpStatus.UNAUTHORIZED);
     }
+}
+
 
     @PutMapping("/profile/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")

@@ -10,7 +10,9 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder
 public class AuthResponse {
-    private String token;
-    private String nickName;
-    private String message;
+    private String token;    // Token JWT
+    private String nickName; // Nickname del usuario
+    private Integer id;      // ID del usuario
+    private String message;  // Mensaje opcional
 }
+

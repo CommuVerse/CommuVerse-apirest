@@ -10,7 +10,7 @@ import com.CommuVerse.CommuVerse_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Optional;
 import java.time.LocalDateTime;
 
 @Service
@@ -109,6 +109,12 @@ public class UserService {
             System.err.println("Error al eliminar el usuario" + e.getMessage());
             return false;
         }
+        
+    }
+
+    
+    public Optional<User> findByNickName(String nickName) {
+        return userRepository.findByNickName(nickName);
     }
 }
 
